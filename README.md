@@ -2,6 +2,7 @@
 ======
 
 [![](https://img.shields.io/badge/Issues%3F-Ask%20for%20Help!-55cbe0.svg)](https://github.com/codefellows/seattle-javascript-401n1/issues/new)
+[![Build Status](https://travis-ci.org/codefellows-seattle-javascript-401n1/lab-09-10-11-express-api.svg?branch=master)](https://travis-ci.org/codefellows-seattle-javascript-401n1/lab-09-10-11-express-api)
 
 # To Submit this Assignment
   * fork this repository
