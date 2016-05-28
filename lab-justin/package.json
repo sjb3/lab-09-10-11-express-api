@@ -1,0 +1,22 @@
+{
+  "name": "lab-justin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "./note_modules/mocha/bin/mocha"
+  },
+  "author": "justin",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3",
+    "superagent": "^2.0.0-alpha.3"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "debug": "^2.2.0",
+    "express": "^4.13.4",
+    "node-uuid": "^1.4.7"
+  }
+}
