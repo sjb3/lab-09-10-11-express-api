@@ -3,6 +3,7 @@
 const uuid = require('node-uuid');
 const debug = require('debug')('note:note');
 const AppError = require('../lib/app-error');
+//const
 
 module.exports = function(content){
   debug('creating note');
@@ -11,3 +12,5 @@ module.exports = function(content){
   this.content = content;
   this.timestamp = new Date();
 };
+
+// Note.prototype.

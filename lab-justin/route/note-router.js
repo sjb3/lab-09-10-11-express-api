@@ -1,16 +1,22 @@
 'use strict';
+//node modules
+//npm modules
+//app modules
 
-const Router = require('express').Router;
+//globals & the modules depend on globals
+const Router = require('express').Router;//
 const noteRouter = module.exports = new Router();
 const debug = require('debug')('note:note-router');
-const AppError = require('../lib/app-error');
+const bodyParser = require('body-parser').json();//
+const sendError = require('../lib/err-response');
+// const AppError = require('../lib/app-error');
 const storage = require('../lib/storage');
 const Note = require('../model/note');
 
 function createNote(reqBody){
   debug('createNote');
-  return new Promise(function(resolve, request){
-    debugger;
+  return new Promise(function(resolve, reject){
+    // debugger;
     var note;
     try{
       note = new Note(reqBody.content);
@@ -25,52 +31,39 @@ function createNote(reqBody){
   });
 }
 
-noteRouter.post('/', function(req, res){
+noteRouter.post('/', bodyParser, sendError, function(req, res){
   debug('HIT endpoint /api/note POST');
+
+  // return new Promise(function(resolve, reject){ })
   createNote(req.body).then(function(note){
     res.status(200).json(note);
   }).catch(function(err){
-    console.error(err.message);
-    if(AppError.isAppError(err)){
-      res.status(err.statusCode).send(err.responseMessage);
-      return;
-    }
-    res.status(500).send('internal server error');
+    res.sendError(err);
   });
 });
 
-noteRouter.get(':/id', function(req, res){
+noteRouter.get('/:id', sendError, function(req, res){
   storage.fetchItem('note', req.params.id).then(function(note){
-  }).catch(function(err){
-    console.error(err.message);
-    if(AppError.idAppError(err)){
-      res.status(err.statusCode).send(err.responseMessage);
-      return;
-    }
-    res.status(500).send('internal server error');
+    // console.log(note , "INSIDE GET SUCCESS");
+    res.status(200).json(note);
+  }).catch((err) => {
+    // console.log(err , "INSIDE GET CATCH");
+    res.sendError(err);
   });
 });
 
-noteRouter.put(':/id', function(req, res){
+noteRouter.put('/:id', bodyParser, sendError, function(req, res){
   storage.updateItem('note', req.params.body).then(function(note){
+    res.status(200).json(note);
   }).catch(function(err){
-    console.error(err.message);
-    if(AppError.idAppError(err)){
-      res.status(err.statusCode).send(err.responseMessage);
-      return;
-    }
-    res.status(500).send('internal server error');
+    res.sendError(err);
   });
 });
 
-noteRouter.delete(':/id', function(req, res){
+noteRouter.delete('/:id', bodyParser, sendError, function(req, res){
   storage.deleteItem('note', req.params.id).then(function(note){
+    res.status(200).json(note);
   }).catch(function(err){
-    console.error(err.message);
-    if(AppError.idAppError(err)){
-      res.status(err.statusCode).send(err.responseMessage);
-      return;
-    }
-    res.status(500).send('internal server error');
+    res.sendError(err);
   });
 });
