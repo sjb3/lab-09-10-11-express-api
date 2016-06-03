@@ -4,6 +4,8 @@
 .DS_Store
 .AppleDouble
 .LSOverride
+lib/note-pool.js
+test/note-pool-test.js
 ##
 
 

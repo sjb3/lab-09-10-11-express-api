@@ -1,27 +1,23 @@
 'use strict';
-//node modules
-//npm modules
-//app modules
 
-//globals & the modules depend on globals
 const Router = require('express').Router;//
-const noteRouter = module.exports = new Router();
+const noteRouter = module.exports = new Router();//instance of Router
 const debug = require('debug')('note:note-router');
-const bodyParser = require('body-parser').json();//
+// const AppErr = require('../lib/app-error');
 const sendError = require('../lib/err-response');
-// const AppError = require('../lib/app-error');
 const storage = require('../lib/storage');
 const Note = require('../model/note');
+const jsonParser = require('body-parser').json();
 
 function createNote(reqBody){
-  debug('createNote');
   return new Promise(function(resolve, reject){
-    // debugger;
     var note;
     try{
       note = new Note(reqBody.content);
+
+      // return resolve(note);
     } catch(err){
-      reject(err);
+      return reject(err);
     }
     storage.setItem('note', note).then(function(note){
       resolve(note);
@@ -31,10 +27,8 @@ function createNote(reqBody){
   });
 }
 
-noteRouter.post('/', bodyParser, sendError, function(req, res){
-  debug('HIT endpoint /api/note POST');
-
-  // return new Promise(function(resolve, reject){ })
+noteRouter.post('/', jsonParser, sendError, function(req, res){  // debug('HIT endpoint /api/note POST');
+  debug('hit endpoint');
   createNote(req.body).then(function(note){
     res.status(200).json(note);
   }).catch(function(err){
@@ -43,26 +37,25 @@ noteRouter.post('/', bodyParser, sendError, function(req, res){
 });
 
 noteRouter.get('/:id', sendError, function(req, res){
+  debug('GET api/note/:id');
   storage.fetchItem('note', req.params.id).then(function(note){
-    // console.log(note , "INSIDE GET SUCCESS");
     res.status(200).json(note);
   }).catch((err) => {
-    // console.log(err , "INSIDE GET CATCH");
     res.sendError(err);
   });
 });
 
-noteRouter.put('/:id', bodyParser, sendError, function(req, res){
-  storage.updateItem('note', req.params.body).then(function(note){
+noteRouter.put('/:id', jsonParser, sendError, function(req, res){
+  storage.updateItem('note', req.params.id , req.body).then(function(note){
     res.status(200).json(note);
   }).catch(function(err){
     res.sendError(err);
   });
 });
 
-noteRouter.delete('/:id', bodyParser, sendError, function(req, res){
-  storage.deleteItem('note', req.params.id).then(function(note){
-    res.status(200).json(note);
+noteRouter.delete('/:id', jsonParser, sendError, function(req, res){
+  storage.deleteItem('note', req.params.id).then(function(){
+    res.status(200).json({});
   }).catch(function(err){
     res.sendError(err);
   });
